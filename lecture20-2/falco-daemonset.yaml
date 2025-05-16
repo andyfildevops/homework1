@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: falco
+  namespace: kube-system
+  labels:
+    app: falco
+spec:
+  selector:
+    matchLabels:
+      app: falco
+  template:
+    metadata:
+      labels:
+        app: falco
+    spec:
+      containers:
+        - name: falco
+          image: falcosecurity/falco:latest
+          securityContext:
+            privileged: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 100m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /host/proc
+              name: proc
+              readOnly: true
+            - mountPath: /host/boot
+              name: boot
+              readOnly: true
+            - mountPath: /host/lib/modules
+              name: libmodules
+              readOnly: true
+            - mountPath: /host/var/run/docker.sock
+              name: docker-socket
+            - mountPath: /host/usr
+              name: usr
+              readOnly: true
+      volumes:
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: boot
+          hostPath:
+            path: /boot
+        - name: libmodules
+          hostPath:
+            path: /lib/modules
+        - name: docker-socket
+          hostPath:
+            path: /var/run/docker.sock
+        - name: usr
+          hostPath:
+            path: /usr
+      tolerations:
+        - operator: Exists  # дозволяє запуск на всіх вузлах, навіть з taints
