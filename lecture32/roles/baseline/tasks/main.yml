@@ -1,0 +1,10 @@
+- name: Встановлення базових пакетів
+  apt:
+    name: ['vim', 'git', 'mc', 'ufw']
+    state: present
+    update_cache: yes
+
+- name: Додавання SSH ключа
+  authorized_key:
+    user: "{{ ansible_user }}"
+    key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"

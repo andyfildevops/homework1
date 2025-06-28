@@ -1,0 +1,16 @@
+- name: Встановлення Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Шаблонізований index.html
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+
+- name: Запуск служби Nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
