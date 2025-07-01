@@ -1,0 +1,13 @@
+- name: Дозволити SSH
+  ufw:
+    rule: allow
+    port: 22
+
+- name: Дозволити HTTP
+  ufw:
+    rule: allow
+    port: 80
+
+- name: Включити UFW
+  ufw:
+    state: enabled
